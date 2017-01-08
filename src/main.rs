@@ -32,6 +32,7 @@ fn real_main(options: Options, config: &Config) -> CliResult<Option<()>> {
 }
 
 fn real_real_main(options: Options, _config: &Config) -> CargoResult<Option<()>> {
+    let err_msg = || human("Really, you think I'm just gonna ignore all those errors above?");
     let mut process = process("cargo");
     process.args(&options.arg_args);
     process.args(&[
@@ -51,10 +52,10 @@ fn real_real_main(options: Options, _config: &Config) -> CargoResult<Option<()>>
         &mut |line| {
             write!(io::stderr(), "{}\n", line).unwrap();
             Ok(())
-        }).map_err(|_| human("subcommand failed"))?;
+        }).map_err(|_| err_msg())?;
     if output.status.success() {
         Ok(None)
     } else {
-        Err(human("subcommand failed"))
+        Err(err_msg())
     }
 }
