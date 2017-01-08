@@ -17,6 +17,7 @@ impl Marvinable for msg::Message {
             message: self.message.marvined(),
             spans: self.spans,
             children: self.children.into_iter().map(Marvinable::marvined).collect(),
+            code: self.code,
         }
     }
 }

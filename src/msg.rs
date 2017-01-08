@@ -122,11 +122,17 @@ impl Span {
 }
 
 #[derive(RustcDecodable, Clone)]
+pub struct Code {
+    pub code: String,
+}
+
+#[derive(RustcDecodable, Clone)]
 pub struct Message {
     pub level: Level,
     pub message: String,
     pub spans: Vec<Span>,
     pub children: Vec<Message>,
+    pub code: Option<Code>,
 }
 
 impl Message {
@@ -136,18 +142,22 @@ impl Message {
             message: "this error originates in a macro outside of the current crate".to_owned(),
             spans: vec![],
             children: vec![],
+            code: None,
         }
     }
 
     fn fmt(&self, mut f: &mut fmt::Formatter, child: bool) -> fmt::Result {
+        let code = self.code.as_ref().map(|code| "[".to_owned() + &code.code + "]");
+
         if child && self.spans.is_empty() {
             write!(f, "      {} {}: {}\n",
                 "=".bold().blue(),
                 self.level.to_string().bold(),
                 self.message)?;
         } else {
-            write!(f, "{}{}{}\n",
+            write!(f, "{}{}{}{}\n",
                 self.level,
+                self.level.colorize(&code.unwrap_or("".to_owned())),
                 ": ".bold(),
                 self.message.bold())?;
         }
