@@ -1,0 +1,10 @@
+[package]
+name = "cargo-marvin"
+version = "0.1.0"
+authors = ["Wim Looman <wim@nemo157.com>"]
+
+[dependencies]
+cargo = "0.15"
+rustc-serialize = "0.3"
+itertools = "0.5"
+colored = "1.4"
