@@ -32,7 +32,7 @@ fn real_main(options: Options, config: &Config) -> CliResult<Option<()>> {
 }
 
 fn real_real_main(options: Options, _config: &Config) -> CargoResult<Option<()>> {
-    let err_msg = || human("Really, you think I'm just gonna ignore all those errors above?");
+    let err_msg = || human("Here I am, brain the size of a planet, and you want me to compile this crate full of errors.");
     let mut process = process("cargo");
     process.args(&options.arg_args);
     process.args(&[
