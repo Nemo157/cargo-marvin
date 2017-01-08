@@ -39,9 +39,9 @@ impl fmt::Display for Level {
 
 #[derive(RustcDecodable)]
 pub struct Text {
-    highlight_start: Option<usize>,
-    highlight_end: Option<usize>,
-    text: String,
+    pub highlight_start: Option<usize>,
+    pub highlight_end: Option<usize>,
+    pub text: String,
 }
 
 impl Text {
@@ -60,16 +60,16 @@ impl Text {
 
 #[derive(RustcDecodable)]
 pub struct Expansion {
-    span: Span
+    pub span: Span
 }
 
 #[derive(RustcDecodable)]
 pub struct Span {
-    column_start: usize,
-    file_name: String,
-    line_start: usize,
-    text: Vec<Text>,
-    expansion: Option<Box<Expansion>>
+    pub column_start: usize,
+    pub file_name: String,
+    pub line_start: usize,
+    pub text: Vec<Text>,
+    pub expansion: Option<Box<Expansion>>
 }
 
 impl Span {
@@ -102,10 +102,10 @@ impl Span {
 
 #[derive(RustcDecodable)]
 pub struct Message {
-    level: Level,
-    message: String,
-    spans: Vec<Span>,
-    children: Vec<Message>,
+    pub level: Level,
+    pub message: String,
+    pub spans: Vec<Span>,
+    pub children: Vec<Message>,
 }
 
 impl fmt::Display for Message {
@@ -127,7 +127,7 @@ impl fmt::Display for Message {
 
 #[derive(RustcDecodable)]
 pub struct Line {
-    message: Message,
+    pub message: Message,
 }
 
 impl fmt::Display for Line {

@@ -11,6 +11,8 @@ use cargo::{ human, CargoResult, CliResult, CliError, Config };
 use cargo::util::process_builder::process;
 use rustc_serialize::json;
 
+use marvin::Marvinable;
+
 const USAGE: &'static str = "
 Usage:
     cargo marvin <args>...
@@ -39,7 +41,7 @@ fn real_real_main(options: Options, _config: &Config) -> CargoResult<Option<()>>
     let output = process.exec_with_streaming(
         &mut |line| {
             match json::decode::<msg::Line>(&line) {
-                Ok(line) => print!("{}", marvin::marvin(line)),
+                Ok(line) => print!("{}", line.marvined()),
                 Err(_) => {
                     println!("{}", line);
                 }
