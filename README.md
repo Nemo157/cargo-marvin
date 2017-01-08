@@ -21,7 +21,7 @@ error: Could not compile `cargo-marvin`.
 
 To learn more, run the command again with --verbose.
 
-error: Really, you think I'm just gonna ignore all those errors above?
+error: Here I am, brain the size of a planet, and you want me to compile this crate full of errors.
 ```
 
 ## License
