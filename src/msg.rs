@@ -23,10 +23,10 @@ impl Level {
 
     pub fn to_string(&self) -> &'static str {
         match *self {
-            Level::warning => "warning",
-            Level::error => "error",
-            Level::note => "note",
-            Level::help => "help",
+            Level::warning => "admonition",
+            Level::error => "transgression",
+            Level::note => "illumination",
+            Level::help => "directive",
         }
     }
 }
