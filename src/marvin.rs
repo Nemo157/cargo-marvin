@@ -25,7 +25,7 @@ impl Marvinable for msg::Message {
 impl Marvinable for String {
     fn marvined(self) -> Self {
         if self.starts_with("use of moved value") {
-            self + ". Again. There goes my hope you learned that by now. Serously. It's not that hard..."
+            self + ". Again. There goes my hope you learned that by now. Seriously. It's not that hard..."
         } else if self.starts_with("aborting due to previous error") {
             self + ". Maybe try a garbage-collected language?"
         } else {
