@@ -37,7 +37,7 @@ impl fmt::Display for Level {
     }
 }
 
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Clone)]
 pub struct Text {
     pub highlight_start: Option<usize>,
     pub highlight_end: Option<usize>,
@@ -58,24 +58,26 @@ impl Text {
     }
 }
 
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Clone)]
 pub struct Expansion {
     pub span: Span
 }
 
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Clone)]
 pub struct Span {
     pub column_start: usize,
     pub file_name: String,
     pub line_start: usize,
     pub text: Vec<Text>,
-    pub expansion: Option<Box<Expansion>>
+    pub expansion: Option<Box<Expansion>>,
+    pub is_primary: bool,
+    pub label: Option<String>,
 }
 
 impl Span {
-    pub fn fmt(&self, mut f: &mut fmt::Formatter, level: Level) -> fmt::Result {
+    pub fn start(&self, mut f: &mut fmt::Formatter, level: Level) -> fmt::Result {
         if let Some(ref expansion) = self.expansion {
-            expansion.span.fmt(f, level)?;
+            expansion.span.start(f, level)?;
         } else {
             write!(f, " {} {}:{}:{}\n",
                 "    -->".bold().blue(),
@@ -83,20 +85,43 @@ impl Span {
                 self.line_start,
                 self.column_start)?;
             write!(f, "      {}\n", "|".bold().blue())?;
+        }
+        Ok(())
+    }
+
+    pub fn middle(&self, mut f: &mut fmt::Formatter, level: Level) -> fmt::Result {
+        if let Some(ref expansion) = self.expansion {
+            expansion.span.middle(f, level)?;
+        } else {
             if let Some(text) = self.text.first() {
                 write!(f, " {:>4} {} ",
                     self.line_start.to_string().bold().blue(),
                     "|".bold().blue())?;
                 text.fmt(f, level)?;
                 write!(f, "\n")?;
+                if let (Some(label), Some(start), Some(end)) = (self.label.as_ref(), text.highlight_start, text.highlight_end) {
+                    write!(f, "      {0} {1:2$}{3} {4}\n",
+                        "|".bold().blue(),
+                        "", start - 1,
+                        level.colorize(&format!("{0:->1$}", "", end - start)),
+                        level.colorize(label))?;
+                }
             }
+        }
+        Ok(())
+    }
+
+    pub fn end(&self, mut f: &mut fmt::Formatter, level: Level) -> fmt::Result {
+        if let Some(ref expansion) = self.expansion {
+            expansion.span.end(f, level)?;
+        } else {
             write!(f, "      {}\n", "|".bold().blue())?;
         }
         Ok(())
     }
 }
 
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Clone)]
 pub struct Message {
     pub level: Level,
     pub message: String,
@@ -113,9 +138,7 @@ impl Message {
             children: vec![],
         }
     }
-}
 
-impl Message {
     fn fmt(&self, mut f: &mut fmt::Formatter, child: bool) -> fmt::Result {
         if child && self.spans.is_empty() {
             write!(f, "      {} {}: {}\n",
@@ -127,9 +150,21 @@ impl Message {
                 self.level,
                 ": ".bold(),
                 self.message.bold())?;
-            for span in &self.spans {
-                span.fmt(f, self.level)?;
+        }
+
+        if !self.spans.is_empty() {
+            let mut spans = self.spans.clone();
+            spans.sort_by_key(|span| span.line_start);
+            let primary = spans.iter().find(|span| span.is_primary).unwrap_or(&spans[0]);
+            primary.start(f, self.level)?;
+            for span in &spans {
+                if span.is_primary {
+                    span.middle(f, self.level)?;
+                } else {
+                    span.middle(f, Level::help)?;
+                }
             }
+            primary.end(f, self.level)?;
             for child in &self.children {
                 child.fmt(f, true)?;
             }
@@ -142,7 +177,7 @@ impl Message {
     }
 }
 
-#[derive(RustcDecodable)]
+#[derive(RustcDecodable, Clone)]
 pub struct Line {
     pub message: Message,
 }
