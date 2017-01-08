@@ -2,27 +2,27 @@
 
 [Inspired by ebrythil on Reddit][inspiration].
 
-```
-> cargo install --git https://github.com/Nemo157/cargo-marvin
-> cargo marvin build --example moved_value
-   Compiling cargo-marvin v0.1.0 (file:///Users/Nemo157/sources/cargo-marvin)
-error[E0382]: use of moved value: `foo`. Again. There goes my hope you learned that by now. Serously. It's not that hard...
-     --> examples/moved_value.rs:7:9
-      |
-    6 |     bar(foo);
-      |         --- value moved here
-    7 |     bar(foo);
-      |         --- value used here after move
-      |
-      = note: move occurs because `foo` has type `std::string::String`, which does not implement the `Copy` trait
+<pre>
+&gt; cargo install --git https://github.com/Nemo157/cargo-marvin
+&gt; cargo marvin build --example moved_value
+<span style="color:green;"></span><span style="color:green;font-weight:bold;">   Compiling</span> cargo-marvin v0.1.0 (file:///Users/Nemo157/sources/cargo-marvin)
+<span style="color:red;font-weight:bold;">error</span><span style="color:red;font-weight:bold;">[E0382]</span><span style="font-weight:bold;">: </span><span style="font-weight:bold;">use of moved value: `foo`. Again. There goes my hope you learned that by now. Serously. It's not that hard...</span>
+ <span style="color:blue;font-weight:bold;">    --&gt;</span> examples/moved_value.rs:7:9
+      <span style="color:blue;font-weight:bold;">|</span>
+ <span style="color:blue;font-weight:bold;">   6</span> <span style="color:blue;font-weight:bold;">|</span>     bar(<span style="color:blue;font-weight:bold;">foo</span>);
+      <span style="color:blue;font-weight:bold;">|</span>         <span style="color:blue;font-weight:bold;">---</span> <span style="color:blue;font-weight:bold;">value moved here</span>
+ <span style="color:blue;font-weight:bold;">   7</span> <span style="color:blue;font-weight:bold;">|</span>     bar(<span style="color:red;font-weight:bold;">foo</span>);
+      <span style="color:blue;font-weight:bold;">|</span>         <span style="color:red;font-weight:bold;">---</span> <span style="color:red;font-weight:bold;">value used here after move</span>
+      <span style="color:blue;font-weight:bold;">|</span>
+      <span style="color:blue;font-weight:bold;">=</span> <span style="font-weight:bold;">note</span>: move occurs because `foo` has type `std::string::String`, which does not implement the `Copy` trait
 
-error: aborting due to previous error. Maybe try a garbage-collected language?
-error: Could not compile `cargo-marvin`.
+<span style="color:red;font-weight:bold;">error</span><span style="color:red;font-weight:bold;"></span><span style="font-weight:bold;">: </span><span style="font-weight:bold;">aborting due to previous error. Maybe try a garbage-collected language?</span>
+<span style="color:red;"></span><span style="color:red;font-weight:bold;">error:</span> Could not compile `cargo-marvin`.
 
 To learn more, run the command again with --verbose.
 
-error: Really, you think I'm just gonna ignore all those errors above?
-```
+<span style="color:red;"></span><span style="color:red;font-weight:bold;">error:</span> Really, you think I'm just gonna ignore all those errors above?
+</pre>
 
 ## License
 
