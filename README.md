@@ -1,4 +1,4 @@
-# [cargo-marvin][marvin]
+# cargo-[marvin][]
 
 [Inspired by ebrythil on Reddit][inspiration].
 
