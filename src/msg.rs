@@ -2,7 +2,7 @@ use std::fmt;
 
 use colored::{ Colorize, ColoredString };
 
-#[derive(RustcDecodable, Clone, Copy)]
+#[derive(RustcDecodable, Clone, Copy, Eq, PartialEq)]
 #[allow(non_camel_case_types)]
 pub enum Level {
     warning,
@@ -76,10 +76,6 @@ impl Span {
     pub fn fmt(&self, mut f: &mut fmt::Formatter, level: Level) -> fmt::Result {
         if let Some(ref expansion) = self.expansion {
             expansion.span.fmt(f, level)?;
-             write!(f, "      {} {}{}\n",
-                "=".bold().blue(),
-                "note".bold(),
-                ": this error originates in a macro outside of the current crate")?;
         } else {
             write!(f, " {} {}:{}:{}\n",
                 "    -->".bold().blue(),
@@ -108,19 +104,40 @@ pub struct Message {
     pub children: Vec<Message>,
 }
 
-impl fmt::Display for Message {
-    fn fmt(&self, mut f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}{}{}\n",
-            self.level,
-            ": ".bold(),
-            self.message.bold())?;
-        for span in &self.spans {
-            span.fmt(f, self.level)?;
+impl Message {
+    fn external_macro() -> Message {
+        Message {
+            level: Level::note,
+            message: "this error originates in a macro outside of the current crate".to_owned(),
+            spans: vec![],
+            children: vec![],
         }
-        for child in &self.children {
-            write!(f, "{}", child)?;
+    }
+}
+
+impl Message {
+    fn fmt(&self, mut f: &mut fmt::Formatter, child: bool) -> fmt::Result {
+        if child && self.spans.is_empty() {
+            write!(f, "      {} {}: {}\n",
+                "=".bold().blue(),
+                self.level.to_string().bold(),
+                self.message)?;
+        } else {
+            write!(f, "{}{}{}\n",
+                self.level,
+                ": ".bold(),
+                self.message.bold())?;
+            for span in &self.spans {
+                span.fmt(f, self.level)?;
+            }
+            for child in &self.children {
+                child.fmt(f, true)?;
+            }
+            if self.spans.iter().any(|span| span.expansion.is_some()) {
+                Message::external_macro().fmt(f, true)?;
+            }
+            write!(f, "\n")?;
         }
-        write!(f, "\n")?;
         Ok(())
     }
 }
@@ -132,6 +149,6 @@ pub struct Line {
 
 impl fmt::Display for Line {
     fn fmt(&self, mut f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.message)
+        self.message.fmt(f, false)
     }
 }
