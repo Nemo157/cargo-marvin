@@ -6,7 +6,7 @@
 > cargo install --git https://github.com/Nemo157/cargo-marvin
 > cargo marvin build --example moved_value
    Compiling cargo-marvin v0.1.0 (file:///Users/Nemo157/sources/cargo-marvin)
-transgression[E0382]: use of moved value: `foo`. Again. There goes my hope you learned that by now. Serously. It's not that hard...
+transgression[E0382]: use of moved value: `foo`. Again. There goes my hope you learned that by now. Seriously. It's not that hard...
      --> examples/moved_value.rs:7:9
       |
     6 |     bar(foo);
