@@ -6,7 +6,7 @@
 > cargo install --git https://github.com/Nemo157/cargo-marvin
 > cargo marvin build --example moved_value
    Compiling cargo-marvin v0.1.0 (file:///Users/Nemo157/sources/cargo-marvin)
-error[E0382]: use of moved value: `foo`. Again. There goes my hope you learned that by now. Serously. It's not that hard...
+transgression[E0382]: use of moved value: `foo`. Again. There goes my hope you learned that by now. Serously. It's not that hard...
      --> examples/moved_value.rs:7:9
       |
     6 |     bar(foo);
@@ -14,9 +14,9 @@ error[E0382]: use of moved value: `foo`. Again. There goes my hope you learned t
     7 |     bar(foo);
       |         --- value used here after move
       |
-      = note: move occurs because `foo` has type `std::string::String`, which does not implement the `Copy` trait
+      = illumination: move occurs because `foo` has type `std::string::String`, which does not implement the `Copy` trait
 
-error: aborting due to previous error. Maybe try a garbage-collected language?
+transgression: aborting due to previous error. Maybe try a garbage-collected language?
 error: Could not compile `cargo-marvin`.
 
 To learn more, run the command again with --verbose.
